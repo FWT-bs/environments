@@ -1,0 +1,48 @@
+{
+  "adapter": "adapter.py",
+  "name": "Tic Tac Toe Smoke Test",
+  "description": "A compact tic-tac-toe benchmark where the agent plays X against a seeded novice O opponent.",
+  "binding_vow": {
+    "version": "1.0.0",
+    "tier": "tier1",
+    "description": "Play tic-tac-toe as X. On each turn, choose one empty board cell index from 0 to 8. The environment plays O after each valid X move. Win by making three X marks in a row, column, or diagonal.",
+    "observation_space": {
+      "type": "json",
+      "description": "{ \"board\": list[string], \"board_rows\": list[list[string]], \"cell_indices\": list[list[int]], \"valid_actions\": list[int], \"moves_remaining\": int, \"message\": string }"
+    },
+    "action_space": {
+      "type": "text",
+      "description": "Return one empty cell index from 0 to 8. A bare number like 4 is preferred, but text containing a single valid index is accepted."
+    },
+    "reward": {
+      "type": "binary",
+      "range": { "low": 0.0, "high": 1.0 },
+      "description": "1.0 if X wins; 0.0 for a draw, loss, or invalid move."
+    },
+    "episode": {
+      "max_steps": 5,
+      "deterministic_reset": true,
+      "supports_seed": true,
+      "parallel_episodes": 1,
+      "observability": "full"
+    },
+    "techniques": []
+  },
+  "scoring": {
+    "primary_metric": "win_rate",
+    "higher_is_better": true,
+    "metrics": [
+      {
+        "name": "win_rate",
+        "type": "terminal_field",
+        "field": "won",
+        "aggregation": "pass_rate"
+      },
+      {
+        "name": "avg_reward",
+        "type": "episode_reward",
+        "aggregation": "mean"
+      }
+    ]
+  }
+}
